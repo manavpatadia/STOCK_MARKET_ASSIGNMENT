@@ -84,5 +84,5 @@ implicit def iterebleWithStdDev(data:Iterable[Double]) = new {
     def stddev:Double = org.apache.spark.util.StatCounter(data).stdev
 }
 val grp_map = grp.map(col => {((col._1._1, col._1._2), ((col._2.map(y=>y._3).avg - col._2.map(y=>y._1).avg * col._2.map(y=>y._2).avg)/(col._2.map(y=>y._1).stddev * col._2.map(y=>y._2).stddev)))})
-val pearsoncoefficient = grp_map.map(col => (col._1._1, col._1._2, col._2)).sortBy(_._3, false)
+val pearsoncoefficient = grp_map.map(col => (col._1._1, col._1._2, col._2.toDouble)).sortBy(_._3, false)
 pearsoncoefficient.map(r => r.productIterator.mkString(",")).saveAsTextFile(OutputFile+"3_3")

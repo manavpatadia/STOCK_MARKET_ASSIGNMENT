@@ -24,6 +24,7 @@ STOCK = LOAD 'hdfs://localhost:9000/STOCK_MARKET_ASSIGNMENT/INPUT/' USING PigSto
 --Select specific columns from those available: SYMBOL, OPEN, HIGH, LOW and CLOSE which meets above criteria
 --Generate count of the number of rows from above result
 
+
 --1.1
 FILTER_DATA = FILTER STOCK BY SYMBOL == 'GEOMETRIC';
 STORE FILTER_DATA INTO 'hdfs://localhost:9000/STOCK_MARKET_ASSIGNMENT/OUTPUT/PIG/1_1/' USING PigStorage (',');

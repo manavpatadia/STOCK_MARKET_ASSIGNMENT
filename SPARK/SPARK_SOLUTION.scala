@@ -1,6 +1,6 @@
 
-val InputFile = "/home/manav/Documents/STOCK_MARKET_ASSIGNMENT/DATA/STOCK_MARKET_DS.csv"
-val OutputFile = "/home/manav/Documents/STOCK_MARKET_ASSIGNMENT/SPARK/OUTPUT/"
+val InputFile = "hdfs://localhost:9000/STOCK_MARKET_ASSIGNMENT/INPUT/STOCK_MARKET_DS.csv"
+val OutputFile = "hdfs://localhost:9000/STOCK_MARKET_ASSIGNMENT/OUTPUT/SPARK/"
 val SYMBOL = 0
 val SERIES = 1
 val OPEN = 2

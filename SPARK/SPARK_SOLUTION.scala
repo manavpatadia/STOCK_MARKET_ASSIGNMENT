@@ -34,8 +34,10 @@ FilterMap.map(r => r.productIterator.mkString(",")).saveAsTextFile(OutputFile+"1
 val colMap = STOCK.filter(col => col(SYMBOL).toString == "GEOMETRIC").map(col => {(col(SYMBOL).toString, col(OPEN).toDouble, col(HIGH).toDouble, col(LOW).toDouble, col(CLOSE).toDouble)})
 val colMap = FilterMap.map(col => {(col._1, col._3, col._4, col._5, col._6)})
 colMap.map(r => r.productIterator.mkString(",")).saveAsTextFile(OutputFile+"1_2")
+
+//1.3
 val countRDD = sc.parallelize(Seq(colMap.count(),""))
-countRDD.saveAsTextFile(OutputFile+"1_3")
+countRDD.saveAsTextFile(OutputFile+"1_3_1")
 
 //Q2 Calculation of various statistical quantities and decision making:
 //Only lines with value "EQ" in the "series" column should be processed. As the first stage, filter out all the lines that do not fulfil this criteria.

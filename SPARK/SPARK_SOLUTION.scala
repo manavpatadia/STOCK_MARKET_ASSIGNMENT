@@ -32,7 +32,6 @@ FilterMap.map(r => r.productIterator.mkString(",")).saveAsTextFile(OutputFile+"1
 
 //1.2
 val colMap = STOCK.filter(col => col(SYMBOL).toString == "GEOMETRIC").map(col => {(col(SYMBOL).toString, col(OPEN).toDouble, col(HIGH).toDouble, col(LOW).toDouble, col(CLOSE).toDouble)})
-val colMap = FilterMap.map(col => {(col._1, col._3, col._4, col._5, col._6)})
 colMap.map(r => r.productIterator.mkString(",")).saveAsTextFile(OutputFile+"1_2")
 
 //1.3

@@ -1,4 +1,4 @@
-it_pearsons_corr_coeff.symbol1	it_pearsons_corr_coeff.symbol2	it_pearsons_corr_coeff.corr
+symbol1	symbol2	corr
 WIPRO	TATAELXSI	0.8918757
 WIPRO	INFY	0.86122817
 TATAELXSI	NIITTECH	0.83705634

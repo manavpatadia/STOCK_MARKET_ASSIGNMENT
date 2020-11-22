@@ -1,5 +1,5 @@
 
-stock_market_data = load '/home/manav/Desktop/stock_market_case_study/input/stock_market.csv' using org.apache.pig.piggybank.storage.CSVLoader() as (symbol:chararray, series:chararray, open:double, high:double, low:double, close:double, last:double, prevclose:double, tottrdqty:double, tottrdval:double, timestamp:chararray, totaltrades:int, isin:chararray);
+stock_market_data = load '/home/suparna/Desktop/stock_market_case_study/input/stock_market.csv' using org.apache.pig.piggybank.storage.CSVLoader() as (symbol:chararray, series:chararray, open:double, high:double, low:double, close:double, last:double, prevclose:double, tottrdqty:double, tottrdval:double, timestamp:chararray, totaltrades:int, isin:chararray);
 
 --q1 use the given csv file as input data and implement following transformations:
 --filter rows on specified criteria "symbol equals geometric"
@@ -8,25 +8,25 @@ stock_market_data = load '/home/manav/Desktop/stock_market_case_study/input/stoc
 
 --1.1
 stock_fltr = filter stock_market_data by LOWER(symbol) == 'geometric';
-store stock_fltr into '/home/manav/Desktop/stock_market_case_study/pig/output/1_1' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER') ;
+store stock_fltr into '/home/suparna/Desktop/stock_market_case_study/pig/output/1_1' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER') ;
 
 --1.2
 select_data = foreach stock_fltr generate symbol, open, high, low, close;
-store select_data into '/home/manav/Desktop/stock_market_case_study/pig/output/1_2/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+store select_data into '/home/suparna/Desktop/stock_market_case_study/pig/output/1_2/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 
 --1.3
 grp_cols = group select_data all;
 stock_count= foreach grp_cols generate COUNT(select_data.symbol) as (count_geo:long);
-store stock_count into '/home/manav/Desktop/stock_market_case_study/pig/output/1_3/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+store stock_count into '/home/suparna/Desktop/stock_market_case_study/pig/output/1_3/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 
 --q2 calculation of various statistical quantities and decision making:
 --only lines with value "eq" in the "series" column should be processed. as the first stage, filter out all the lines that do not fulfil this criteria.
 --for every stock_market_data, for every year, calculate the statistical parameters(MIN, MAX, mean and standard deviation)  and store the generated information in properly designated tables.
 
 --2.1
-stock_market_data = load '/home/manav/Desktop/stock_market_case_study/input/stock_market.csv' using org.apache.pig.piggybank.storage.CSVLoader() as ( symbol:chararray, series:chararray, open:double, high:double, low:double, close:double, last:double, prevclose:double, tottrdqty:double, tottrdval:double, timestamp:chararray, totaltrades:int, isin:chararray);
+stock_market_data = load '/home/suparna/Desktop/stock_market_case_study/input/stock_market.csv' using org.apache.pig.piggybank.storage.CSVLoader() as ( symbol:chararray, series:chararray, open:double, high:double, low:double, close:double, last:double, prevclose:double, tottrdqty:double, tottrdval:double, timestamp:chararray, totaltrades:int, isin:chararray);
 stock_fltr = filter stock_market_data by LOWER(series) == 'eq';
-store stock_fltr into '/home/manav/Desktop/stock_market_case_study/pig/output/2_1/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+store stock_fltr into '/home/suparna/Desktop/stock_market_case_study/pig/output/2_1/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 
 --2.2
 grp = group stock_fltr by (symbol, SUBSTRING(timestamp,0,4));
@@ -37,7 +37,7 @@ statistics = foreach grp {
 };
 all_statistics = foreach statistics generate $0, $1, $2, $3, $4, ROUND_TO(SQRT(($6 / $5) - ($4 * $4)),6) as (stddev:double);
 sort_statistics = order all_statistics by symbol, year desc;
-store sort_statistics into '/home/manav/Desktop/stock_market_case_study/pig/output/2_2/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+store sort_statistics into '/home/suparna/Desktop/stock_market_case_study/pig/output/2_2/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 
 
 --q3 select any year for which data is available:
@@ -48,15 +48,15 @@ store sort_statistics into '/home/manav/Desktop/stock_market_case_study/pig/outp
 --3.1
 stock_fltr = filter stock_market_data by tottrdqty >= 300000 and SUBSTRING(timestamp,0,4) == '2016';
 limit_data = limit stock_fltr 25;
-store limit_data into '/home/manav/Desktop/stock_market_case_study/pig/output/3_1/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+store limit_data into '/home/suparna/Desktop/stock_market_case_study/pig/output/3_1/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 
 --3.2
 itstock = filter stock_fltr by LOWER(symbol) in ('hcltech', 'niittech', 'tataelxsi','tcs', 'infy', 'wipro', 'datamatics','techm','mindtree', 'ofss');
-store itstock into '/home/manav/Desktop/stock_market_case_study/pig/output/3_2/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+store itstock into '/home/suparna/Desktop/stock_market_case_study/pig/output/3_2/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 
 --3.3
 
-stock_market_data = load '/home/manav/Desktop/stock_market_case_study/input/stock_market.csv' using org.apache.pig.piggybank.storage.CSVLoader() as ( symbol:chararray, series:chararray, open:double, high:double, low:double, close:double, last:double, prevclose:double, tottrdqty:double, tottrdval:double, timestamp:chararray, totaltrades:int, isin:chararray);
+stock_market_data = load '/home/suparna/Desktop/stock_market_case_study/input/stock_market.csv' using org.apache.pig.piggybank.storage.CSVLoader() as ( symbol:chararray, series:chararray, open:double, high:double, low:double, close:double, last:double, prevclose:double, tottrdqty:double, tottrdval:double, timestamp:chararray, totaltrades:int, isin:chararray);
 stock_fltr = filter stock_market_data by tottrdqty >= 300000 and SUBSTRING(timestamp,0,4) == '2016';
 stock_it_1 = filter stock_fltr by LOWER(symbol) in ('hcltech', 'niittech', 'tataelxsi','tcs', 'infy', 'wipro', 'datamatics','techm','mindtree', 'ofss');
 stock_it_2 = filter stock_fltr by LOWER(symbol) in ('hcltech', 'niittech', 'tataelxsi','tcs', 'infy', 'wipro', 'datamatics','techm','mindtree', 'ofss');
@@ -71,5 +71,5 @@ correlation = foreach group_symbol_1_2 {
 correlation_stock_it = order correlation by symbol1, symbol2, timestamp;
 pearsons_corr_coeff_it = foreach correlation generate symbol1, symbol2, ROUND_TO((sum_c1c2 - (sum_c1 * sum_c2 / num)) / SQRT((sum_c1c1 - (sum_c1 * sum_c1) / num) * (sum_c2c2 - (sum_c2 * sum_c2) / num)),8) as (pearsoncoefficient:double);
 pearsons_corr_coeff_sort = order pearsons_corr_coeff_it by pearsoncoefficient desc;
-store pearsons_corr_coeff_sort into '/home/manav/Desktop/stock_market_case_study/pig/output/3_3/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+store pearsons_corr_coeff_sort into '/home/suparna/Desktop/stock_market_case_study/pig/output/3_3/' using org.apache.pig.piggybank.storage.CSVExcelStorage('\t', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 

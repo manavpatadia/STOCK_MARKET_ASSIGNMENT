@@ -1,4 +1,4 @@
-it_companies_stock.symbol	it_companies_stock.series	it_companies_stock.open	it_companies_stock.high	it_companies_stock.low	it_companies_stock.close	it_companies_stock.last	it_companies_stock.prevclose	it_companies_stock.tottrdqty	it_companies_stock.tottrval	it_companies_stock.mydate	it_companies_stock.totaltrades	it_companies_stock.isin
+symbol	series	open	high	low	close	last	prevclose	tottrdqty	tottrval	mydate	totaltrades	isin
 HCLTECH	EQ	844.0	855.35	838.5	846.25	846.0	841.2	1117527	9.4941504205E8	2016-04-21	41235	INE860A01027
 INFY	EQ	1251.0	1251.0	1218.1	1226.3	1226.8	1243.6	2720550	3.35040972855E9	2016-04-21	97218	INE009A01021
 NIITTECH	EQ	507.65	518.3	500.0	500.45	503.95	503.15	397822	2.004262221E8	2016-04-21	3754	INE591G01017

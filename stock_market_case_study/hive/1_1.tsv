@@ -1,4 +1,4 @@
-stock_market_data.symbol	stock_market_data.series	stock_market_data.open	stock_market_data.high	stock_market_data.low	stock_market_data.close	stock_market_data.last	stock_market_data.prevclose	stock_market_data.tottrdqty	stock_market_data.tottrval	stock_market_data.mydate	stock_market_data.totaltrades	stock_market_data.isin
+symbol	series	open	high	low	close	last	prevclose	tottrdqty	tottrval	mydate	totaltrades	isin
 GEOMETRIC	EQ	264.5	264.5	256.85	258.65	259.0	259.45	56801	1.46458094E7	2017-02-28	662	INE797A01021
 GEOMETRIC	EQ	261.5	264.0	257.55	263.4	263.5	258.4	253940	6.646759105E7	2017-01-23	4714	INE797A01021
 GEOMETRIC	EQ	258.0	260.95	257.0	258.55	258.05	258.0	16776	4342624.0	2017-02-20	350	INE797A01021

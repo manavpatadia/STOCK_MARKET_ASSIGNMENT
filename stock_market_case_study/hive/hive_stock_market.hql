@@ -1,6 +1,6 @@
---hdfs dfs -mkdir /stock_market_case_study
---hdfs dfs -mkdir /stock_market_case_study/input
---hdfs dfs -put /home/manav/Desktop/stock_market_case_study/input/stock_market.csv /stock_market_case_study/input/
+hdfs dfs -mkdir /stock_market_case_study
+hdfs dfs -mkdir /stock_market_case_study/input
+hdfs dfs -put /home/suparna/Desktop/stock_market_case_study/input/stock_market.csv /stock_market_case_study/input/
 
 hive -e "create database stock_db"
 --use stock_db
@@ -13,25 +13,25 @@ hive -e "create external table stock_db.stock_market_data (symbol string, series
 --generate count of the number of rows from above result
 
 --1.1
-hive -e "select * from  stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/manav/Desktop/stock_market_case_study/hive/output1_1.tsv
+hive -e "select * from  stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/suparna/Desktop/stock_market_case_study/hive/output1_1.tsv
 
 --1.2
-hive -e "select symbol, open, high, low, close from stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/manav/Desktop/stock_market_case_study/hive/output1_2.tsv
+hive -e "select symbol, open, high, low, close from stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/suparna/Desktop/stock_market_case_study/hive/output1_2.tsv
 
 --1.3
-hive -e "select count(*) as num_rows from stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/manav/Desktop/stock_market_case_study/hive/output1_3.tsv
+hive -e "select count(*) as num_rows from stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/suparna/Desktop/stock_market_case_study/hive/output1_3.tsv
 
 --q2 calculation of various statistical quantities and decision making:
 --only lines with value "eq" in the "series" column should be processed. as the first stage, filter out all the lines that do not fulfil this criteria.
 --for every stock, for every year, calculate the following statistical parameters and store the generated information in properly designated tables.
 
 --2.1
-hive -e "select * from  stock_db.stock_market_data where lower(series) = 'eq'" > /home/manav/Desktop/stock_market_case_study/hive/output2_1.tsv
+hive -e "select * from  stock_db.stock_market_data where lower(series) = 'eq'" > /home/suparna/Desktop/stock_market_case_study/hive/output2_1.tsv
 
 --2.2
-hive -e "select symbol, min(close), max(close), round(avg(close),6), round(stddev_pop(close),6), substr(mydate,1,4) as year from  stock_db.stock_market_data where lower(series) = 'eq' group by symbol, substr(mydate,1,4) order by symbol, year desc" > /home/manav/Desktop/stock_market_case_study/hive/output2_2.tsv
+hive -e "select symbol, min(close), max(close), round(avg(close),6), round(stddev_pop(close),6), substr(mydate,1,4) as year from  stock_db.stock_market_data where lower(series) = 'eq' group by symbol, substr(mydate,1,4) order by symbol, year desc" > /home/suparna/Desktop/stock_market_case_study/hive/output2_2.tsv
 
-hive -e "create external table  stock_db.stock_statistical_param (symbol string, min float, max float, mean float, std float, year string) row format delimited fields terminated by ',' stored as textfile location '/home/manav/Desktop/stock_market_case_study/hive/output2_2.tsv'"
+hive -e "create external table  stock_db.stock_statistical_param (symbol string, min float, max float, mean float, std float, year string) row format delimited fields terminated by ',' stored as textfile location '/home/suparna/Desktop/stock_market_case_study/hive/output2_2.tsv'"
 
 
 --q3 select any year for which data is available:
@@ -45,7 +45,7 @@ hive -e "create table stock_db.stock_market_data_2016(symbol string, series stri
 
 hive -e "insert overwrite table stock_db.stock_market_data_2016 select * from  stock_db.stock_market_data where tottrdqty >= 300000 and substr(mydate,1,4) = '2016'"  
 
-hive -e "select * from  stock_db.stock_market_data_2016 limit 25" > /home/manav/Desktop/stock_market_case_study/hive/output3_1.tsv
+hive -e "select * from  stock_db.stock_market_data_2016 limit 25" > /home/suparna/Desktop/stock_market_case_study/hive/output3_1.tsv
 
 --3.2
 --creating table with it_companies_stock for year 2016
@@ -53,7 +53,7 @@ hive -e "create table stock_db.it_companies_stock (symbol string, series string,
 
 hive -e "insert overwrite table stock_db.it_companies_stock select * from  stock_db.stock_market_data_2016 where lower(symbol) in ('hcltech', 'niittech', 'tataelxsi','tcs', 'infy', 'wipro', 'datamatics','techm','mindtree', 'ofss')"
 
-hive -e "select * from stock_db.it_companies_stock" > /home/manav/Desktop/stock_market_case_study/hive/output3_2.tsv
+hive -e "select * from stock_db.it_companies_stock" > /home/suparna/Desktop/stock_market_case_study/hive/output3_2.tsv
 
 --3_3
 hive -e "create table stock_db.it_companies_stock_close (symbol1 string, close1 float, symbol2 string, close2 float,mydate string)" 
@@ -64,15 +64,15 @@ hive -e "create table stock_db.it_pearsons_corr_coeff(symbol1 string, symbol2 st
 
 hive -e "insert overwrite table stock_db.it_pearsons_corr_coeff select symbol1, symbol2, (avg(close1*close2) - (avg(close1) *avg(close2)))/(stddev_pop(close1) * stddev_pop(close2)) as pearsoncoefficient from stock_db.it_companies_stock_close group by symbol1, symbol2 order by pearsoncoefficient desc"
 
-hive -e "select * from stock_db.it_pearsons_corr_coeff" > /home/manav/Desktop/stock_market_case_study/hive/output3_3.tsv
+hive -e "select * from stock_db.it_pearsons_corr_coeff" > /home/suparna/Desktop/stock_market_case_study/hive/output3_3.tsv
 
 
 
---hive -e "set hive.cli.print.header=true; select * from  stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/manav/Desktop/stock_market_case_study/hive/1_1.tsv
---hive -e "set hive.cli.print.header=true; select symbol, open, high, low, close from stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/manav/Desktop/stock_market_case_study/hive/1_2.tsv
---hive -e "set hive.cli.print.header=true; select count(*) as num_rows from stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/manav/Desktop/stock_market_case_study/hive/1_3.tsv
---hive -e "set hive.cli.print.header=true; select * from  stock_db.stock_market_data where lower(series) = 'eq'" > /home/manav/Desktop/stock_market_case_study/hive/2_1.tsv
---hive -e "set hive.cli.print.header=true; select symbol, min(close), max(close), round(avg(close),6), round(stddev_pop(close),6), substr(mydate,1,4) as year from  stock_db.stock_market_data where lower(series) = 'eq' group by symbol, substr(mydate,1,4) order by symbol, year desc" > /home/manav/Desktop/stock_market_case_study/hive/2_2.tsv
---hive -e "set hive.cli.print.header=true; select * from  stock_db.stock_market_data_2016 limit 25" > /home/manav/Desktop/stock_market_case_study/hive/3_1.tsv
---hive -e "set hive.cli.print.header=true; select * from stock_db.it_companies_stock" > /home/manav/Desktop/stock_market_case_study/hive/3_2.tsv
---hive -e "set hive.cli.print.header=true; select * from stock_db.it_pearsons_corr_coeff" > /home/manav/Desktop/stock_market_case_study/hive/3_3.tsv
+--hive -e "set hive.cli.print.header=true; select * from  stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/suparna/Desktop/stock_market_case_study/hive/1_1.tsv
+--hive -e "set hive.cli.print.header=true; select symbol, open, high, low, close from stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/suparna/Desktop/stock_market_case_study/hive/1_2.tsv
+--hive -e "set hive.cli.print.header=true; select count(*) as num_rows from stock_db.stock_market_data where lower(symbol) = 'geometric'" > /home/suparna/Desktop/stock_market_case_study/hive/1_3.tsv
+--hive -e "set hive.cli.print.header=true; select * from  stock_db.stock_market_data where lower(series) = 'eq'" > /home/suparna/Desktop/stock_market_case_study/hive/2_1.tsv
+--hive -e "set hive.cli.print.header=true; select symbol, min(close), max(close), round(avg(close),6), round(stddev_pop(close),6), substr(mydate,1,4) as year from  stock_db.stock_market_data where lower(series) = 'eq' group by symbol, substr(mydate,1,4) order by symbol, year desc" > /home/suparna/Desktop/stock_market_case_study/hive/2_2.tsv
+--hive -e "set hive.cli.print.header=true; select * from  stock_db.stock_market_data_2016 limit 25" > /home/suparna/Desktop/stock_market_case_study/hive/3_1.tsv
+--hive -e "set hive.cli.print.header=true; select * from stock_db.it_companies_stock" > /home/suparna/Desktop/stock_market_case_study/hive/3_2.tsv
+--hive -e "set hive.cli.print.header=true; select * from stock_db.it_pearsons_corr_coeff" > /home/suparna/Desktop/stock_market_case_study/hive/3_3.tsv

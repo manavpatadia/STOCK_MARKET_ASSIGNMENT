@@ -1,4 +1,4 @@
-stock_market_data_2016.symbol	stock_market_data_2016.series	stock_market_data_2016.open	stock_market_data_2016.high	stock_market_data_2016.low	stock_market_data_2016.close	stock_market_data_2016.last	stock_market_data_2016.prevclose	stock_market_data_2016.tottrdqty	stock_market_data_2016.tottrval	stock_market_data_2016.mydate	stock_market_data_2016.totaltrades	stock_market_data_2016.isin
+symbol	series	open	high	low	close	last	prevclose	tottrdqty	tottrval	mydate	totaltrades	isin
 3IINFOTECH	EQ	4.4	4.45	4.3	4.3	4.3	4.35	684070	2991352.25	2016-04-21	360	INE748C01020
 ABAN	EQ	188.25	189.95	185.75	186.55	185.75	184.45	811346	1.52286965E8	2016-04-21	11709	INE421A01028
 ABFRL	EQ	155.2	157.0	150.1	153.15	152.05	154.85	445626	6.788413875E7	2016-04-21	12656	INE647O01011

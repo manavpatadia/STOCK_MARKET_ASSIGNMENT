@@ -44,8 +44,8 @@ countRDD.saveAsTextFile(OutputFile+"py_1_3")
 #2.1
 STOCK = sc.textFile(InputFile).filter(lambda x: x.split(",")[1] in ["EQ"])
 STOCK.repartition(1).saveAsTextFile(OutputFile+"py_2_1")
+
 #2.2
-from pyspark.statcounter import StatCounter
 stock_map = STOCK.map(lambda x: x.split(",")).map(lambda x: (str(x[0]), str(x[10]).split("-")[0], float(x[5]), float(x[5]), float(x[5]), float(x[5]))).toDF()
 stats = stock_map.groupby('_1','_2').agg({'_3': 'min', '_4':'max', '_5': 'mean', '_6':'stddev'})
 stats.rdd.map(list).repartition(1).saveAsTextFile(OutputFile+"py_2_3")
@@ -59,7 +59,6 @@ stats.rdd.map(list).repartition(1).saveAsTextFile(OutputFile+"py_2_3")
 #3.1
 STOCK = sc.textFile(InputFile).map(lambda x: x.split(",")).filter(lambda x: float(x[8]) >= 300000 and x[10].split("-")[0] == "2017")
 STOCK_25 = sc.parallelize(STOCK.take(25)).saveAsTextFile(OutputFile+"py_3_1")
-
 
 #3.2
 ITSTOCK = STOCK.filter(lambda x: str(x[0]) in ("HCLTECH", "NIITTECH", "TATAELXSI", "TCS", "INFY", "WIPRO", "DATAMATICS", "TECHM", "MINDTREE", "OFSS"))
@@ -83,7 +82,7 @@ stats = fltr_map2.toDF().groupby('_1','_2').agg({'_3':'mean', '_4': 'mean', '_5'
 
 stats_rdd = stats.rdd.map(list)
 pearsoncoefficient = stats_rdd.map(lambda x: (((x[3] - x[2]*x[5]) / (x[4] * x[6]), (x[0], x[1])) if (x[4] != 0 and x[6] != 0) else (-99999,(x[0],x[1])))).sortByKey(False).map(lambda x: (x[1][0], x[1][1], x[0]))
-pearsoncoefficient.repartition(1).saveAsTextFile(OutputFile+"py_3_34")
+pearsoncoefficient.repartition(1).saveAsTextFile(OutputFile+"py_3_3")
 
 
 

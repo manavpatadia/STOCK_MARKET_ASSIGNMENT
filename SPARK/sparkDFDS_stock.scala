@@ -4,10 +4,11 @@ import org.apache.spark
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.functions._
+
 val spark = SparkSession.builder.appName("SparkSQL").master("local[*]").getOrCreate()
 
 case class STOCK_SCHEMA(SYMBOL:String, SERIES:String, OPEN:Double, HIGH:Double, LOW:Double, CLOSE:Double, LAST:Double, PREVCLOSE:Double, TOTTRDQTY:Double, TOTTRDVAL:Double, TIMESTAMP:String, TOTALTRADES:Int, ISIN:String)
-
+case class ITSTOCK(SYMBOL1: String, SYMBOL2: String, CLOSE1: Double, CLOSE2: Double)
 
 //for importing data without headers
 
@@ -31,17 +32,15 @@ a1_3.repartition(1).write.format("csv").option("header", "true").save("/home/man
 val a2_1 = STOCK_DF.filter("SERIES = 'EQ'") 
 a2_1.repartition(1).write.format("csv").option("header", "true").save("/home/manav/Documents/STOCK_MARKET_ASSIGNMENT/SPARK/DF_2_1")
 
-
 val a2_2 = a2_1.groupBy(col("SYMBOL"),substring(col("TIMESTAMP"),1,4).as("YEAR")).agg(min("CLOSE").as("Minimum"), max("CLOSE").as("Maximum"), avg("CLOSE").as("Average"), stddev("CLOSE").as("StdDev")).sort($"SYMBOL".desc, $"YEAR".desc)
 a2_2.repartition(1).write.format("csv").option("header", "true").save("/home/manav/Documents/STOCK_MARKET_ASSIGNMENT/SPARK/DF_2_2")
+
 
 val a3_1 = STOCK_DF.filter("TOTTRDQTY >= 300000 AND SUBSTR(TIMESTAMP,1,4) = '2017'") 
 a3_1.repartition(1).write.format("csv").option("header", "true").save("/home/manav/Documents/STOCK_MARKET_ASSIGNMENT/SPARK/DF_3_1")
 
 val a3_2 = a3_1.filter("SYMBOL IN ('HCLTECH', 'NIITTECH', 'TATAELXSI','TCS', 'INFY', 'WIPRO', 'DATAMATICS','TECHM','MINDTREE', 'OFSS')")
 a3_2.repartition(1).write.format("csv").option("header", "true").save("/home/manav/Documents/STOCK_MARKET_ASSIGNMENT/SPARK/DF_3_2")
-
-case class ITSTOCK(SYMBOL1: String, SYMBOL2: String, CLOSE1: Double, CLOSE2: Double)
 
 val ITSTOCKPairs = a3_2.as("T1").join(a3_2.as("T2"), $"T1.TIMESTAMP" === $"T2.TIMESTAMP" && $"T1.SYMBOL" > $"T2.SYMBOL").
 select($"T1.SYMBOL".alias("SYMBOL1"),
